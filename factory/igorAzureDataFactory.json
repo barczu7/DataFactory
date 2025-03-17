@@ -1,0 +1,9 @@
+{
+	"name": "igorAzureDataFactory",
+	"location": "northeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "e8c6d8eb-ff51-4173-9539-605f14b09e58",
+		"tenantId": "63441aef-da0e-4397-bb7e-f9d4705e963b"
+	}
+}

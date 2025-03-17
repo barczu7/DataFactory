@@ -1,0 +1,9 @@
+{
+	"name": "igorDataFactoryCenter",
+	"location": "northeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "edc3469f-c849-44b3-8742-6b7addd29f21",
+		"tenantId": "63441aef-da0e-4397-bb7e-f9d4705e963b"
+	}
+}

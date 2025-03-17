@@ -10,14 +10,21 @@
 						"type": "DatasetReference"
 					},
 					"name": "telemetry"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
+					},
+					"name": "errors"
 				}
 			],
 			"sinks": [],
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
-				"          datetime as string,",
-				"          machineID as string,",
+				"          datetime as timestamp,",
+				"          machineID as integer,",
 				"          volt as string,",
 				"          rotate as string,",
 				"          pressure as string,",
@@ -25,7 +32,15 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> telemetry"
+				"     ignoreNoFilesFound: false) ~> telemetry",
+				"source(output(",
+				"          datetime as timestamp,",
+				"          machineID as integer,",
+				"          errorID as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> errors"
 			]
 		}
 	}

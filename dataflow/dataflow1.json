@@ -16,7 +16,8 @@
 						"referenceName": "errors",
 						"type": "DatasetReference"
 					},
-					"name": "errors"
+					"name": "errors",
+					"description": "Import data from errors\n"
 				},
 				{
 					"dataset": {
@@ -41,7 +42,10 @@
 					"name": "window1"
 				},
 				{
-					"name": "pivot1"
+					"name": "failuresToColumns"
+				},
+				{
+					"name": "window24"
 				}
 			],
 			"scriptLines": [
@@ -66,8 +70,8 @@
 				"     ignoreNoFilesFound: false) ~> errors",
 				"source(output(",
 				"          datetime as timestamp,",
-				"          machineID as string,",
-				"          errorID as string",
+				"          machineID as integer,",
+				"          failure as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -107,8 +111,18 @@
 				"     rangeSpecified: true) ~> window1",
 				"failures pivot(groupBy(machineID,",
 				"          datetime),",
+				"     pivotBy(failure),",
 				"     columnNaming: '$N$V',",
-				"     lateral: true) ~> pivot1"
+				"     lateral: true) ~> failuresToColumns",
+				"window1 window(asc(datetime, true),",
+				"     rangeSpecified: true,",
+				"     startRowOffset: -24L,",
+				"     endRowOffset: 0L,",
+				"     mean_rotate_24h = mean(rotate),",
+				"          mean_pressure_24h = mean(pressure),",
+				"          mean_vibration_24h = mean(vibration),",
+				"          mean_volt_24h = mean(volt),",
+				"          stddev_volt_24h = stddev(volt)) ~> window24"
 			]
 		}
 	}

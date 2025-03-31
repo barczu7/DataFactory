@@ -13,10 +13,17 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "DelimitedText2",
+						"referenceName": "errors",
 						"type": "DatasetReference"
 					},
 					"name": "errors"
+				},
+				{
+					"dataset": {
+						"referenceName": "failures",
+						"type": "DatasetReference"
+					},
+					"name": "failures"
 				}
 			],
 			"sinks": [],
@@ -32,6 +39,9 @@
 				},
 				{
 					"name": "window1"
+				},
+				{
+					"name": "pivot1"
 				}
 			],
 			"scriptLines": [
@@ -54,6 +64,14 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> errors",
+				"source(output(",
+				"          datetime as timestamp,",
+				"          machineID as string,",
+				"          errorID as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> failures",
 				"errors pivot(groupBy(datetime,",
 				"          machineID),",
 				"     pivotBy(errorID),",
@@ -79,14 +97,18 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"select1 window(asc(datetime, true),",
-				"     rangeSpecified: true,",
 				"     startRowOffset: -3L,",
 				"     endRowOffset: 0L,",
 				"     mean_rotate_3h = mean(rotate),",
 				"          mean_pressure_3h = mean(pressure),",
 				"          mean_vibration_3h = mean(vibration),",
 				"          mean_volt_3h = mean(volt),",
-				"          stddev_volt_3h = stddev(volt)) ~> window1"
+				"          stddev_volt_3h = stddev(volt),",
+				"     rangeSpecified: true) ~> window1",
+				"failures pivot(groupBy(machineID,",
+				"          datetime),",
+				"     columnNaming: '$N$V',",
+				"     lateral: true) ~> pivot1"
 			]
 		}
 	}
